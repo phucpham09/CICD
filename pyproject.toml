@@ -24,5 +24,15 @@ dev = [
     "pytest (>=9.0.2,<10.0.0)",
     "httpx (>=0.28.1,<0.29.0)",
     "ruff (>=0.15.0,<0.16.0)",
-    "pre-commit (>=4.5.1,<5.0.0)"
+    "pre-commit (>=4.5.1,<5.0.0)",
+    "pytest-cov (>=7.0.0,<8.0.0)"
 ]
+
+[tool.pytest.ini_options]
+# Chỉ định thư mục chứa test
+testpaths = ["tests"]
+
+
+[tool.coverage.run]
+source = ["src/apps"]
+omit = ["tests/*", "**/__init__.py"]
