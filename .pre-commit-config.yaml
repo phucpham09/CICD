@@ -1,0 +1,33 @@
+# Cấu hình pre-commit cho dự án FastAPI
+repos:
+  # 1. Các kiểm tra cơ bản của Git
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace      # Loại bỏ khoảng trắng thừa cuối dòng
+      - id: end-of-file-fixer       # Đảm bảo file kết thúc bằng một dòng trống
+      - id: check-yaml               # Kiểm tra cú pháp file YAML
+      - id: check-added-large-files  # Ngăn chặn commit file quá nặng (>500KB)
+      - id: debug-statements         # Ngăn chặn commit code còn dính breakpoint (pdb, v.v.)
+  # 2. RUFF: "Siêu công cụ" cho FastAPI (Linting + Formatting + Import Sorting)
+  # Ruff cực kỳ nhanh vì viết bằng Rust, thay thế cho Black, Isort, Flake8.
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.0
+    hooks:
+      - id: ruff
+        args: [ --fix ] # Tự động sửa các lỗi lint có thể sửa được
+      - id: ruff-format  # Format code chuẩn PEP8 (giống Black)
+
+  # 3. GITLEAKS: Chốt chặn bảo mật, chống lộ API Key, Secret
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.0
+    hooks:
+      - id: gitleaks
+
+  # 4. BANDIT: Kiểm tra các lỗi bảo mật đặc thù của Python
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.7
+    hooks:
+      - id: bandit
+        args: ["-iii", "-ll"] # Chỉ báo cáo các lỗi mức độ trung bình/cao
+        exclude: ^tests/      # Không quét thư mục test
