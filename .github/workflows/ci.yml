@@ -33,10 +33,19 @@ jobs:
 
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-root
+        run: poetry install --no-interaction --no-root --with dev
 
       - name: Install project
         run: poetry install --no-interaction
 
-      - name: Run tests
-        run: poetry run pytest tests/ -v
+      # Bước mới: Kiểm tra Linting bằng Ruff
+      - name: Lint with Ruff
+        run: poetry run ruff check .
+
+      # Bước mới: Kiểm tra Format bằng Ruff
+      - name: Check formatting with Ruff
+        run: poetry run ruff format --check .
+
+      # Chạy test với coverage (Sẽ dùng config từ pyproject.toml)
+      - name: Run tests with coverage
+        run: poetry run pytest --cov=apps --cov-report=term-missing --cov-fail-under=80
